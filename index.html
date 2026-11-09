@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Questmax · Make a trip of it</title>
+<meta name="description" content="Tell Questmax where you're going, how long you have, what you enjoy and what you want to spend. Get a day-by-day plan with honest costs and travel times. Now covering Malawi.">
+<meta name="theme-color" content="#1f4a3a">
+<meta property="og:title" content="Questmax · Make a trip of it">
+<meta property="og:description" content="A trip that fits you, not a generic top-ten list. Now covering Malawi.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f4a3a'/%3E%3Cpath d='M6 23l7-11 4 6 3-4 6 9z' fill='%23fbf9f4'/%3E%3Ccircle cx='22' cy='9' r='2.5' fill='%23d9996c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Young+Serif&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<!--APP-START-->
+<a class="sr" href="#app">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Questmax home">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M6 23l7-11 4 6 3-4 6 9z" fill="var(--paper)"/><circle cx="22" cy="9" r="2.5" fill="var(--clay)"/></svg>
+      Questmax <span class="beta">Beta</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#plan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Plan</a>
+      <a href="#trip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>My trip</a>
+      <a href="#explore"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>Explore</a>
+      <a href="#saved"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg>Saved</a>
+      <a href="#about"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></svg>How it works</a>
+    </nav>
+  </div>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div><div class="brandline">Questmax. Make a trip of it.</div><div>Beta. Prices and travel times are estimates. No bookings are made on this site.</div></div>
+    <div class="row"><a href="#about">How we check info</a><a href="#explore">Malawi catalogue</a></div>
+  </div>
+</footer>
+
+<dialog id="sheet" class="sheet" aria-label="Details"></dialog>
+
+<script src="js/config.js"></script>
+<script src="js/data/malawi.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/app.js"></script>
+<!--APP-END-->
+</body>
+</html>
