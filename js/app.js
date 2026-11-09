@@ -10,6 +10,7 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const seedOf = str => [...str].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % 997;
   const r5 = n => Math.max(0, Math.round(n / 5) * 5);
   const money = ([lo, hi]) => {
     const a = r5(lo), b = r5(hi);
@@ -206,21 +207,21 @@
     const stops = tripStops(sample);
     const c = P.costTrip(dest, sample);
     app.innerHTML = `
-    <section class="hero"><div class="wrap">
-      <div class="hero-copy fade">
-        <span class="eyebrow">Trip planner · Now covering Malawi</span>
-        <h1>Tell us what you’re into. We’ll help you make a trip of it.</h1>
+    <section class="hero">${QMScene("lake", 7, { w: 1600, h: 900, cls: "scene scene-bg", fit: "xMidYMax slice", sunX: 0.6, sunY: 0.7, sunScale: 0.08, top: 0.74, waterY: 0.84 })}<div class="wrap">
+      <div class="hero-copy">
+        <span class="stamp"><i></i> Now planning trips in Malawi</span>
+        <h1>Tell us what you’re into. We’ll help you <em>make a trip of it.</em></h1>
         <p class="lede">A few days, a set budget, a list of things you love. Questmax helps bring it all together into a trip that feels like yours.</p>
         <div class="hero-actions">
           <a class="btn primary big" href="#plan">Plan my trip</a>
           <button class="btn big" id="open-sample">See a sample week</button>
         </div>
-        <p class="muted" style="font-size:.9rem">Free. No sign-up. Honest price ranges, and every listing tells you who to confirm with.</p>
+        <p class="hint-line">Free. No sign-up. Honest price ranges, and every listing tells you who to confirm with.</p>
       </div>
-      <div class="hero-art">
-        ${mapSVG({ stops, legs: sample.days.filter(d => d.travel).map(d => d.travel), title: "Sample week in Malawi, route map" })}
+      <div class="hero-art"><div class="hero-card">
+        ${mapSVG({ stops, legs: sample.days.filter(d => d.travel).map(d => d.travel), fit: true, title: "Sample week in Malawi, route map" })}
         <div class="hero-note"><span class="eyebrow">Sample week</span><br>${stops.map(s => esc(s.label)).join(" → ")}<br><span class="price">${money(c.total)}</span> <span class="muted">per person, est.</span></div>
-      </div>
+      </div></div>
     </div></section>
 
     <section class="section alt"><div class="wrap">
@@ -237,7 +238,7 @@
       <div class="section-head"><span class="eyebrow">Where we cover</span><h2>One country at a time, done properly.</h2>
       <p class="muted">We add destinations as we gather local info we can stand behind. Malawi is first.</p></div>
       <div class="dest-list">
-        <div class="dest"><span class="chip forest">${icon("check", 14)} Open in beta</span><h3>Malawi</h3><p class="muted" style="font-size:.92rem">${dest.places.length} places, ${dest.activities.length} things to do. Lake, parks, mountains, tea.</p><a href="#explore">Browse the catalogue →</a></div>
+        <div class="dest"><div class="place-art">${QMScene("lake", 3, { w: 600, h: 220 })}</div><span class="chip forest">${icon("check", 14)} Open in beta</span><h3>Malawi</h3><p class="muted" style="font-size:.92rem">${dest.places.length} places, ${dest.activities.length} things to do. Lake, parks, mountains, tea.</p><a href="#explore">Browse the catalogue →</a></div>
         ${window.QM_COMING_SOON.map(n => `<div class="dest off"><span class="chip">Researching</span><h3>${esc(n)}</h3><p style="font-size:.92rem">Not yet. We’d rather wait than guess.</p></div>`).join("")}
       </div>
     </div></section>
@@ -249,7 +250,11 @@
         <div class="stack"><h3>Estimates, not promises</h3><p class="muted">Prices and travel times are ranges. No live bookings, no fake availability.</p></div>
         <div class="stack"><h3>Spot something wrong?</h3><p class="muted">Every listing has a report button. Local knowledge makes this better for everyone.</p></div>
       </div>
-    </div></section>`;
+    </div></section>
+    <section class="section"><div class="wrap"><div class="cta-band">
+      <h2>You’ve got the days. Let’s figure out the rest.</h2>
+      <a class="btn primary big" href="#plan">Plan my trip</a>
+    </div></div></section>`;
     $("#open-sample").onclick = () => { const t = sampleTrip(); t.name = "Sample week: wildlife and water"; setTrip(t); go("trip"); };
   }
 
@@ -428,9 +433,8 @@
         const tags = P.matchedTags(dest, p.id, trip.inputs);
         const canSwap = !p.gateway && !d.stopover;
         dayHtml += `<div class="stop-head">
-          <div class="row"><span class="eyebrow">${esc(p.region)} · ${d.departure ? "Last day" : nights ? `${nights} night${nights > 1 ? "s" : ""}` : ""}${d.stopover ? " · Overnight on the way" : ""}</span>
-            ${canSwap ? `<button class="btn ghost small no-print" data-swapstop="${p.id}">${icon("swap", 16)} Swap this stop</button>` : ""}</div>
-          <h2>${esc(p.name)}</h2>
+          <div class="banner">${QMScene(p.scene, seedOf(p.id) + di, { w: 1000, h: 312 })}<div class="label"><span class="eyebrow">${esc(p.region)} · ${d.departure ? "Last day" : nights ? `${nights} night${nights > 1 ? "s" : ""}` : ""}${d.stopover ? " · Overnight on the way" : ""}</span><h2>${esc(p.name)}</h2></div></div>
+          ${canSwap ? `<div class="row" style="justify-content:flex-end"><button class="btn ghost small no-print" data-swapstop="${p.id}">${icon("swap", 16)} Swap this stop</button></div>` : ""}
           <p class="muted">${esc(p.summary)} ${d.stopover ? "Breaks up a long drive." : tags.length ? `Here for the ${tags.map(t => INTEREST_INFO[t].label.toLowerCase()).join(" and ")}.` : esc(p.why)}</p>
           ${p.accessNote ? `<p class="check-note">${icon("alert", 16)} ${esc(p.accessNote)}</p>` : ""}
         </div>`;
@@ -505,7 +509,7 @@
         <p>${di === 0 ? "Grab some kwacha, a local SIM and a proper meal." : "Wander, swim, nap, or ask your host what’s on nearby."}</p>
         <div class="acts no-print"><button class="btn ghost small" data-fill="${di}:${ii}">${icon("plus", 14)} Fill with something</button></div></li>` : activityItem(trip, ix.act[it.id], di, ii)).join("");
     return `<article class="card day fade">
-      <div class="day-top"><h3>Day ${di + 1}${date ? ` · <span class="muted" style="font-family:var(--f-body);font-size:.95rem">${date}</span>` : ""}</h3>
+      <div class="day-top"><h3><span class="daynum">Day ${di + 1}</span>${date ? ` · <span class="muted" style="font-family:var(--f-body);font-size:.95rem">${date}</span>` : ""}</h3>
         <span class="muted" style="font-size:.9rem">${d.departure ? `Fly home from ${esc(p.name)}` : d.stopover ? `Night in ${esc(p.name)}` : ""}</span></div>
       ${legH}
       ${items ? `<ul class="items">${items}</ul>` : ""}
@@ -683,7 +687,8 @@
       ${list.length ? `<div class="places">${list.map(x => {
         let t; try { t = P.hydrate(dest, x.data); } catch (e) { return ""; }
         const c = P.costTrip(dest, t); const stops = tripStops(t);
-        return `<article class="card pad place"><span class="eyebrow">${t.inputs.days} days · saved ${new Date(x.savedAt).toLocaleDateString()}</span>
+        const hero = ix.place[(stops.find(s2 => !ix.place[s2.id].gateway) || stops[0]).id];
+        return `<article class="card pad place"><div class="place-art">${QMScene(hero.scene, seedOf(hero.id), { w: 600, h: 220 })}</div><span class="eyebrow">${t.inputs.days} days · saved ${new Date(x.savedAt).toLocaleDateString()}</span>
           <h3>${esc(x.name || "My trip")}</h3><p class="muted" style="font-size:.93rem">${stops.map(s => esc(s.label)).join(" → ")}</p>
           <p><span class="price">${money(c.total)}</span> <span class="muted">per person, est.</span></p>
           <div class="row"><button class="btn primary small" data-open="${x.id}">Open</button><button class="btn ghost small" data-del="${x.id}">${icon("trash", 14)} Delete</button></div>
@@ -723,6 +728,7 @@
     const prov = p.providerId && dest.providers[p.providerId];
     const osm = `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`;
     return `<article class="card pad place">
+      <div class="place-art">${QMScene(p.scene, seedOf(p.id), { w: 600, h: 220, label: p.name + " illustration" })}</div>
       <div class="row" style="justify-content:space-between"><span class="eyebrow">${esc(p.region)}${p.gateway ? " · Airport" : ""}</span><span class="mono muted">${Math.abs(p.lat).toFixed(2)}°S ${p.lon.toFixed(2)}°E</span></div>
       <h3>${esc(p.name)}</h3>
       <p class="muted" style="font-size:.95rem">${esc(p.summary)}</p>
