@@ -31,6 +31,9 @@
   const checkedLabel = x => x.lastChecked
     ? `Checked ${new Date(x.lastChecked + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}`
     : "";
+  const art = (p, seed, o) => p.photo
+    ? `<figure class="photo"><img src="${esc(p.photo.src)}" alt="${esc(p.photo.caption)}" loading="lazy" decoding="async"><figcaption><a href="${esc(p.photo.page)}" target="_blank" rel="noopener" title="${esc(p.photo.caption)}. Photo by ${esc(p.photo.author)}, ${esc(p.photo.license)}">${icon("camera", 11)} ${esc(p.photo.author)} · ${esc(p.photo.license)}</a></figcaption></figure>`
+    : QMScene(p.scene, seed, o);
   const srcName = s => s.url
     ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)} ${icon("ext", 12)}</a>`
     : esc(s.label);
@@ -40,6 +43,7 @@
 
   const I = {
     pin: '<path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/>',
+    camera: '<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     wallet: '<path d="M4 7.5h14a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7.5zM4 7.5 15 4v3.5"/><circle cx="16" cy="14" r="1.2"/>',
     car: '<path d="M5 16V12l2-5h10l2 5v4M5 16h14M5 16v2M19 16v2"/><circle cx="8" cy="13" r=".8"/><circle cx="16" cy="13" r=".8"/>',
@@ -241,7 +245,7 @@
       <div class="section-head"><span class="eyebrow">Where we cover</span><h2>One country at a time, done properly.</h2>
       <p class="muted">We add destinations as we gather local info we can stand behind. Malawi is first.</p></div>
       <div class="dest-list">
-        <div class="dest"><div class="place-art">${QMScene("lake", 3, { w: 600, h: 220 })}</div><span class="chip forest">${icon("check", 14)} Open in beta</span><h3>Malawi</h3><p class="muted" style="font-size:.92rem">${dest.places.length} places, ${dest.activities.length} things to do. Lake, parks, mountains, tea.</p><a href="#explore">Browse the catalogue →</a></div>
+        <div class="dest"><div class="place-art">${art(dest.places.find(x => x.id === "nkhata-bay") || { scene: "lake" }, 3, { w: 600, h: 220 })}</div><span class="chip forest">${icon("check", 14)} Open in beta</span><h3>Malawi</h3><p class="muted" style="font-size:.92rem">${dest.places.length} places, ${dest.activities.length} things to do. Lake, parks, mountains, tea.</p><a href="#explore">Browse the catalogue →</a></div>
         ${window.QM_COMING_SOON.map(n => `<div class="dest off"><span class="chip">Researching</span><h3>${esc(n)}</h3><p style="font-size:.92rem">Not yet. We’d rather wait than guess.</p></div>`).join("")}
       </div>
     </div></section>
@@ -436,7 +440,7 @@
         const tags = P.matchedTags(dest, p.id, trip.inputs);
         const canSwap = !p.gateway && !d.stopover;
         dayHtml += `<div class="stop-head">
-          <div class="banner">${QMScene(p.scene, seedOf(p.id) + di, { w: 1000, h: 312 })}<div class="label"><span class="eyebrow">${esc(p.region)} · ${d.departure ? "Last day" : nights ? `${nights} night${nights > 1 ? "s" : ""}` : ""}${d.stopover ? " · Overnight on the way" : ""}</span><h2>${esc(p.name)}</h2></div></div>
+          <div class="banner">${art(p, seedOf(p.id) + di, { w: 1000, h: 312 })}<div class="label"><span class="eyebrow">${esc(p.region)} · ${d.departure ? "Last day" : nights ? `${nights} night${nights > 1 ? "s" : ""}` : ""}${d.stopover ? " · Overnight on the way" : ""}</span><h2>${esc(p.name)}</h2></div></div>
           ${canSwap ? `<div class="row" style="justify-content:flex-end"><button class="btn ghost small no-print" data-swapstop="${p.id}">${icon("swap", 16)} Swap this stop</button></div>` : ""}
           <p class="muted">${esc(p.summary)} ${d.stopover ? "Breaks up a long drive." : tags.length ? `Here for the ${tags.map(t => INTEREST_INFO[t].label.toLowerCase()).join(" and ")}.` : esc(p.why)}</p>
           ${p.accessNote ? `<p class="check-note">${icon("alert", 16)} ${esc(p.accessNote)}</p>` : ""}
@@ -691,7 +695,7 @@
         let t; try { t = P.hydrate(dest, x.data); } catch (e) { return ""; }
         const c = P.costTrip(dest, t); const stops = tripStops(t);
         const hero = ix.place[(stops.find(s2 => !ix.place[s2.id].gateway) || stops[0]).id];
-        return `<article class="card pad place"><div class="place-art">${QMScene(hero.scene, seedOf(hero.id), { w: 600, h: 220 })}</div><span class="eyebrow">${t.inputs.days} days · saved ${new Date(x.savedAt).toLocaleDateString()}</span>
+        return `<article class="card pad place"><div class="place-art">${art(hero, seedOf(hero.id), { w: 600, h: 220 })}</div><span class="eyebrow">${t.inputs.days} days · saved ${new Date(x.savedAt).toLocaleDateString()}</span>
           <h3>${esc(x.name || "My trip")}</h3><p class="muted" style="font-size:.93rem">${stops.map(s => esc(s.label)).join(" → ")}</p>
           <p><span class="price">${money(c.total)}</span> <span class="muted">per person, est.</span></p>
           <div class="row"><button class="btn primary small" data-open="${x.id}">Open</button><button class="btn ghost small" data-del="${x.id}">${icon("trash", 14)} Delete</button></div>
@@ -731,7 +735,7 @@
     const prov = p.providerId && dest.providers[p.providerId];
     const osm = `https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=11/${p.lat}/${p.lon}`;
     return `<article class="card pad place">
-      <div class="place-art">${QMScene(p.scene, seedOf(p.id), { w: 600, h: 220, label: p.name + " illustration" })}</div>
+      <div class="place-art">${art(p, seedOf(p.id), { w: 600, h: 220, label: p.name + " illustration" })}</div>
       <div class="row" style="justify-content:space-between"><span class="eyebrow">${esc(p.region)}${p.gateway ? " · Airport" : ""}</span><span class="mono muted">${Math.abs(p.lat).toFixed(2)}°S ${p.lon.toFixed(2)}°E</span></div>
       <h3>${esc(p.name)}</h3>
       <p class="muted" style="font-size:.95rem">${esc(p.summary)}</p>
@@ -798,6 +802,9 @@
         <p><span class="chip ok">${icon("check", 14)} Checked</span> We confirmed this with the provider or an official source on the date shown.</p>
         <p><span class="chip">${icon("info", 14)} Questmax research</span> Our own research, and our best current information. Prices and opening times change, so confirm with the provider before you go.</p>
       </div>
+      <h2>Photos</h2>
+      <p>Place photos come from Wikimedia Commons under free licences. Thanks to the photographers:</p>
+      <ul class="credits">${dest.places.filter(p => p.photo).map(p => `<li><strong>${esc(p.name)}</strong>: ${esc(p.photo.caption)}. <a href="${esc(p.photo.page)}" target="_blank" rel="noopener">${esc(p.photo.author)}</a>, ${p.photo.licenseUrl ? `<a href="${esc(p.photo.licenseUrl)}" target="_blank" rel="noopener">${esc(p.photo.license)}</a>` : esc(p.photo.license)}</li>`).join("")}</ul>
       <h2>What we don’t do (yet)</h2>
       <ul><li>No live bookings and no guaranteed availability.</li><li>We don’t copy listings from map apps or present guesses as facts.</li><li>One country at a time. Malawi first, more once we can stand behind the info.</li></ul>
       <h2>Know Malawi well?</h2>
