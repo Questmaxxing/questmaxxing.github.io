@@ -31,9 +31,12 @@
   const checkedLabel = x => x.lastChecked
     ? `Checked ${new Date(x.lastChecked + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}`
     : "";
+  const srcName = s => s.url
+    ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)} ${icon("ext", 12)}</a>`
+    : esc(s.label);
   const provenance = x => x.status === "checked" && x.lastChecked
-    ? `${icon("check", 14)} ${checkedLabel(x)} · ${esc(x.source.label)}`
-    : `${icon("info", 14)} Source: ${esc(x.source.label)}`;
+    ? `<span class="ok-mark">${icon("check", 14)} ${checkedLabel(x)}</span> · ${srcName(x.source)}`
+    : `${icon("info", 14)} Source: ${srcName(x.source)}`;
 
   const I = {
     pin: '<path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/>',

@@ -10,11 +10,10 @@
     source:      where the info came from
     lastChecked: "YYYY-MM-DD" or null (null = not checked yet)
 
-  IMPORTANT: this is a beta seed list compiled from general knowledge.
-  Nothing here has been confirmed with operators yet, so everything is
-  marked "unverified" with lastChecked: null. When you confirm a listing
-  (phone call, operator email, official site), set status: "checked",
-  lastChecked to the date, and update source.
+  Listings start from our own research. The VERIFICATION LOG near the
+  bottom of this file records what was checked against an official or
+  operator source, when, and where. Only those listings show a Checked
+  badge. To check another one, add it to the log with its source URL.
 
   Money: USD per person unless noted. Ranges are estimates.
 */
@@ -220,6 +219,118 @@
     a("lv-manchewe", "livingstonia", "Manchewe Falls walk", "A 125 m waterfall with a cave behind it.", ["hiking", "water"], 3, [3, 10]),
     a("mz-coffee", "mzuzu", "Mzuzu coffee stop", "Coffee grown on the Viphya hills, roasted in town.", ["food"], 1, [2, 6], { needsCheck: true })
   ];
+
+  /* ---------------------------------------------------------------
+     VERIFICATION LOG
+     Each entry below was checked against an official, operator,
+     park-authority, government or UNESCO page on the date given.
+     `checked: true` → shows a Checked badge with a link to the source.
+     `checked: false` → we corrected something from a reliable source
+     but couldn't confirm the listing itself, so no badge.
+     Prices on rate sheets are per international adult.
+  ---------------------------------------------------------------- */
+  const D = "2026-11-09";
+  const MAJETE_2027 = { label: "Majete park fees & activities 2027", url: "https://visitmajete.org/wp-content/uploads/sites/2/2026/09/Majete-Park-Fees-Activities-2027.pdf" };
+  const LIWONDE_2025 = { label: "Liwonde park rates 2025", url: "https://visitliwonde.org/wp-content/uploads/sites/4/2025/02/Chimwala-Camp-Rates-2025.pdf" };
+  const NKHOTAKOTA_2024 = { label: "Nkhotakota gate fees 2024", url: "https://visitnkhotakota.org/wp-content/uploads/sites/6/2023/11/Gate-Entry-Fees-Effective-January-2024.pdf" };
+  const MMCT = { label: "Mulanje Mountain Conservation Trust", url: "https://mountmulanje.org.mw/where-to-get-what/" };
+  const ZFL = { label: "Zomba Forest Lodge", url: "https://www.zombaforestlodge.com/activities" };
+  const SATEMWA = { label: "Satemwa Tea Estate", url: "https://www.satemwa.com" };
+  const VM_CENTRAL = { label: "Visit Malawi (Dept of Tourism)", url: "https://visitmalawi.mw/central-region/" };
+  const VM_NORTH = { label: "Visit Malawi (Dept of Tourism)", url: "https://visitmalawi.mw/northern-region/" };
+  const VM_MUSEUMS = { label: "Visit Malawi: museums & monuments", url: "https://visitmalawi.mw/museums-and-monuments/" };
+  const CAWS = { label: "Chelinda Lodge (Central African Wilderness Safaris)", url: "https://www.cawsmw.com/" };
+
+  const checks = {
+    // Providers
+    "african-parks": { checked: true, source: { label: "African Parks", url: "https://www.africanparks.org/the-parks/liwonde" },
+      howToContact: "Fees, camps and activities are on each park's own site: visitmajete.org, visitliwonde.org and visitnkhotakota.org." },
+    "lilongwe-wildlife": { checked: true, source: { label: "Lilongwe Wildlife Trust", url: "https://lilongwewildlife.org/visit/" },
+      website: "https://lilongwewildlife.org/visit/",
+      howToContact: "Open daily except Wednesdays. Phone or email the centre for guided walk times." },
+    "mulanje-trust": { checked: true, source: MMCT, website: "https://mountmulanje.org.mw",
+      howToContact: "Book mountain huts in advance and pay at the Likhubula Forestry Office or infoMulanje. Guides and porters are arranged at Likhubula." },
+    "satemwa": { checked: true, source: SATEMWA,
+      howToContact: "Email Huntingdon House on the estate to arrange a visit or tea tour." },
+    "unesco-chongoni": { checked: true, source: { label: "UNESCO World Heritage Centre", url: "https://whc.unesco.org/en/list/476" } },
+    "unesco-lake": { checked: true, source: { label: "UNESCO World Heritage Centre", url: "https://whc.unesco.org/en/list/289" } },
+    "visit-malawi": { checked: true, source: { label: "Malawi Department of Tourism", url: "https://visitmalawi.mw/" }, website: "https://visitmalawi.mw" },
+
+    // Places
+    "majete": { checked: true, source: MAJETE_2027, fee: [33, 33] },
+    "liwonde": { checked: true, source: LIWONDE_2025, fee: [30, 30] },
+    "nkhotakota": { checked: true, source: NKHOTAKOTA_2024, fee: [15, 15] },
+    "mulanje": { checked: true, source: MMCT },
+    "zomba": { checked: true, source: ZFL },
+    "thyolo": { checked: true, source: SATEMWA },
+    "blantyre": { checked: false, airport: "Bakili Muluzi International (BLZ), formerly Chileka" },
+
+    // Activities
+    "mj-drive": { checked: true, source: MAJETE_2027, cost: [35, 40] },
+    "mj-walk": { checked: true, source: MAJETE_2027, cost: [88, 88],
+      summary: "On foot with an armed scout for 2 to 3 hours, in groups of 4 to 8. Slower, quieter and closer to the small stuff." },
+    "mj-community": { checked: true, source: MAJETE_2027, cost: [75, 75], needsCheck: false,
+      summary: "Visit a village on the reserve's edge for traditional food and dancing. Needs at least 6 people." },
+    "lw-boat": { checked: true, source: LIWONDE_2025, cost: [25, 60], hours: 2,
+      summary: "Hippos, crocs, elephants at the water and kingfishers everywhere. Park-run trips are the cheapest; lodge boats cost more. Late afternoon is best." },
+    "lw-drive": { checked: true, source: LIWONDE_2025, cost: [25, 35], hours: 2 },
+    "lw-walk": { checked: true, source: LIWONDE_2025, cost: [25, 25], hours: 2,
+      summary: "Early morning on foot with a scout. Over-16s only." },
+    "nk-walk": { checked: true, source: NKHOTAKOTA_2024, cost: [15, 45],
+      summary: "Thick miombo woodland on foot with a ranger. Book ahead." },
+    "llw-wildlife": { checked: true, source: { label: "Lilongwe Wildlife Trust", url: "https://lilongwewildlife.org/visit/" },
+      name: "Lilongwe Wildlife Centre trails", cost: [8, 12], tags: ["wildlife", "hiking"],
+      summary: "Forest trails, a river boardwalk and a bird hide at the Wildlife Trust's centre, with guided walks some days. The rescue sanctuary itself stays closed to visitors so the animals stay wild. Closed Wednesdays." },
+    "zp-loop": { checked: true, source: ZFL },
+    "zp-town": { checked: true, source: ZFL },
+    "ml-chambe": { checked: true, source: { label: "Mountain Club of Malawi", url: "https://mcm.org.mw/pages/huts.html" } },
+    "th-tasting": { checked: true, source: SATEMWA, name: "Satemwa estate tea tour",
+      summary: "See how tea is grown and made on a family estate. Arrange it with the estate before you go." },
+    "bt-heritage": { checked: false,
+      summary: "St Michael and All Angels, a brick mission church built 1888 to 1891, and Mandala House (1882), often called the oldest building in the country, now a café and gallery." },
+    // Centre and north
+    "senga-bay": { checked: true, source: VM_CENTRAL },
+    "sb-beach": { checked: true, source: VM_CENTRAL },
+    "dedza": { checked: true, source: VM_CENTRAL },
+    "dz-pottery": { checked: true, source: VM_CENTRAL,
+      summary: "Watch the potters at work, then browse the workshop's pieces. There's a café on site too." },
+    "dz-rockart": { checked: true, source: { label: "UNESCO World Heritage Centre", url: "https://whc.unesco.org/en/list/476" } },
+    "dz-mua": { checked: true, source: { label: "KuNgoni Centre of Culture and Art", url: "https://kungoni.org/chamare-museum.html" }, needsCheck: false,
+      summary: "The Chamare Museum at Mua mission covers Chewa, Ngoni and Yao culture, with a remarkable room of Gule Wamkulu masks. Guided tours. Open Monday to Saturday, 8am to 4pm." },
+    "nkhata-bay": { checked: true, source: VM_NORTH },
+    "likoma": { checked: true, source: VM_NORTH,
+      accessNote: "Reached by the state-run Ilala ferry or a charter flight. The Ilala is old and has been pulled from service at short notice, so check close to your travel date." },
+    "lk-cathedral": { checked: true, source: VM_MUSEUMS },
+    "lk-beach": { checked: true, source: VM_NORTH },
+    "nyika": { checked: true, source: VM_NORTH },
+    "ny-drive": { checked: true, source: CAWS, summary: "Day or night drives across the open grassland looking for zebra, roan antelope and eland." },
+    "ny-walk": { checked: true, source: CAWS, kidFriendly: false,
+      summary: "Rolling hills and big skies on foot with a guide and scout. Lodge walking safaris are 18 and over." },
+    "ny-bike": { checked: true, source: CAWS, needsCheck: false },
+    "livingstonia": { checked: true, source: VM_NORTH,
+      accessNote: "From the lakeshore at Chitimba the Gorode road climbs a steep run of hairpins and can be rough. The approach from the M1 via Phwezi is reported to be tarred. Ask locally about conditions." },
+    "lv-stonehouse": { checked: true, source: VM_MUSEUMS },
+    "mzuzu": { checked: true, source: { label: "Visit Malawi: Mzuzu", url: "https://visitmalawi.mw/2082-2/" } },
+    "mz-coffee": { checked: false,
+      summary: "Smallholder coffee from the northern hills (Misuku, Phoka, Viphya and the Nkhata Bay highlands), processed here in Mzuzu." },
+    "ilala": { checked: false,
+      kind: "State-run passenger ferry on Lake Malawi",
+      howToContact: "No official website or timetable. Ask at Nkhata Bay or Monkey Bay harbour, or your lodge, close to your travel date. The ship is old and has been taken out of service at short notice." },
+
+    "th-forest": { checked: false,
+      summary: "Walks through the estate's remaining patches of indigenous forest. Bring binoculars for forest birds." }
+  };
+  const removed = new Set(["zp-horse"]); // Plateau stables closed (Zomba Forest Lodge, checked 2026-11-09)
+
+  [...Object.values(providers), ...places, ...activities].forEach(x => {
+    const id = x.id || Object.keys(providers).find(k => providers[k] === x);
+    const c = checks[id];
+    if (!c) return;
+    const { checked, ...fields } = c;
+    Object.assign(x, fields);
+    if (checked) { x.status = "checked"; x.lastChecked = D; }
+  });
+  for (let i = activities.length - 1; i >= 0; i--) if (removed.has(activities[i].id)) activities.splice(i, 1);
 
   window.QM_DESTINATIONS = window.QM_DESTINATIONS || {};
   window.QM_DESTINATIONS.malawi = {

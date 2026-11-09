@@ -231,6 +231,8 @@ table.costs tr.total td { font-weight: 700; border-bottom: none; }
 .place li { display: grid; gap: .1rem; font-size: .93rem; }
 .place li .row { justify-content: space-between; flex-wrap: nowrap; align-items: baseline; }
 .provenance { font-size: .8rem; color: var(--muted); display: flex; gap: .35rem; align-items: center; flex-wrap: wrap; }
+.provenance .ok-mark { color: var(--ok); font-weight: 600; display: inline-flex; gap: .3rem; align-items: center; }
+.provenance a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* Sheets */
 dialog.sheet { border: none; padding: 0; border-radius: 16px 16px 0 0; width: min(560px, 100%); max-height: 88vh; margin: auto auto 0; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
