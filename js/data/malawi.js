@@ -19,7 +19,7 @@
   Money: USD per person unless noted. Ranges are estimates.
 */
 (function () {
-  const SEED = { label: "Questmax beta seed list", note: "Compiled from general travel knowledge. Not yet confirmed with the operator." };
+  const SEED = { label: "Questmax research", note: "Compiled from general travel knowledge. Not yet confirmed with the operator." };
   const U = { status: "unverified", source: SEED, lastChecked: null };
 
   // Accommodation bands per person per night [low, high], by budget tier

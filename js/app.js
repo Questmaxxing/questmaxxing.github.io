@@ -29,7 +29,10 @@
   };
   const checkedLabel = x => x.lastChecked
     ? `Checked ${new Date(x.lastChecked + "T12:00:00").toLocaleDateString(undefined, { month: "short", year: "numeric" })}`
-    : "Not checked yet";
+    : "";
+  const provenance = x => x.status === "checked" && x.lastChecked
+    ? `${icon("check", 14)} ${checkedLabel(x)} · ${esc(x.source.label)}`
+    : `${icon("info", 14)} Source: ${esc(x.source.label)}`;
 
   const I = {
     pin: '<path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/>',
@@ -212,7 +215,7 @@
           <a class="btn primary big" href="#plan">Plan my trip</a>
           <button class="btn big" id="open-sample">See a sample week</button>
         </div>
-        <p class="muted" style="font-size:.9rem">Free. No sign-up. Prices are estimates and we tell you what still needs checking.</p>
+        <p class="muted" style="font-size:.9rem">Free. No sign-up. Honest price ranges, and every listing tells you who to confirm with.</p>
       </div>
       <div class="hero-art">
         ${mapSVG({ stops, legs: sample.days.filter(d => d.travel).map(d => d.travel), title: "Sample week in Malawi, route map" })}
@@ -242,7 +245,7 @@
     <section class="section alt"><div class="wrap">
       <div class="section-head"><span class="eyebrow">Straight with you</span><h2>We show our working.</h2></div>
       <div class="dest-list">
-        <div class="stack"><h3>Where it came from</h3><p class="muted">Every listing shows its source and when it was last checked. If we haven’t checked it, we say so.</p></div>
+        <div class="stack"><h3>Where it came from</h3><p class="muted">Every listing shows its source, plus a Checked date once we’ve confirmed it with the provider.</p></div>
         <div class="stack"><h3>Estimates, not promises</h3><p class="muted">Prices and travel times are ranges. No live bookings, no fake availability.</p></div>
         <div class="stack"><h3>Spot something wrong?</h3><p class="muted">Every listing has a report button. Local knowledge makes this better for everyone.</p></div>
       </div>
@@ -523,7 +526,9 @@
         <span>${a.tags.map(t => INTEREST_INFO[t].label).join(" · ")}</span>
         ${prov ? `<span>${prov.website ? `<a href="${esc(prov.website)}" target="_blank" rel="noopener">${esc(prov.name)} ${icon("ext", 13)}</a>` : esc(prov.name)}</span>` : ""}
         <span><a href="${osm}" target="_blank" rel="noopener">${icon("pin", 13)} Map</a></span></div>
-      ${a.needsCheck || a.status !== "checked" ? `<p class="check-note">${icon("alert", 15)} <span>${a.needsCheck ? "This one looks promising, but we’d confirm the details before you build your day around it." : `${checkedLabel(a)}. Source: ${esc(a.source.label)}.`} ${prov ? esc(prov.howToContact) : ""}</span></p>` : `<p class="provenance">${icon("check", 14)} ${checkedLabel(a)} · ${esc(a.source.label)}</p>`}
+      ${a.needsCheck
+        ? `<p class="check-note">${icon("alert", 15)} <span>This one looks promising, but we’d confirm the details before you build your day around it. ${prov ? esc(prov.howToContact) : ""}</span></p>`
+        : `<p class="provenance">${provenance(a)}${prov && a.status !== "checked" ? ` · ${esc(prov.howToContact)}` : ""}</p>`}
       <div class="acts no-print">
         <button class="btn ghost small" data-swap="${di}:${ii}">${icon("swap", 14)} Swap</button>
         <button class="btn ghost small" data-cheap="${di}:${ii}">${icon("coin", 14)} Cheaper</button>
@@ -722,10 +727,10 @@
       <h3>${esc(p.name)}</h3>
       <p class="muted" style="font-size:.95rem">${esc(p.summary)}</p>
       ${p.accessNote ? `<p class="check-note">${icon("alert", 15)} ${esc(p.accessNote)}</p>` : ""}
-      <ul>${acts.map(a => `<li><div class="row"><strong>${esc(a.name)}</strong><span class="price">${money(a.cost)}</span></div><span class="muted" style="font-size:.85rem">${hrs(a.hours)} · ${a.tags.map(t => INTEREST_INFO[t].label).join(" · ")}${a.needsCheck ? " · needs checking" : ""}</span></li>`).join("")}</ul>
+      <ul>${acts.map(a => `<li><div class="row"><strong>${esc(a.name)}</strong><span class="price">${money(a.cost)}</span></div><span class="muted" style="font-size:.85rem">${hrs(a.hours)} · ${a.tags.map(t => INTEREST_INFO[t].label).join(" · ")}${a.needsCheck ? " · confirm before you go" : ""}</span></li>`).join("")}</ul>
       <p style="font-size:.9rem"><strong>Stay:</strong> <span class="price">${money(p.stay.shoestring)}</span> to <span class="price">${money(p.stay.treat)}</span> <span class="muted">per person/night</span>${p.fee ? ` · <strong>Fees:</strong> <span class="price">${money(p.fee)}</span>/day` : ""}</p>
       <div class="row" style="font-size:.9rem">${prov && prov.website ? `<a href="${esc(prov.website)}" target="_blank" rel="noopener">${esc(prov.name)} ${icon("ext", 13)}</a>` : ""}<a href="${osm}" target="_blank" rel="noopener">${icon("pin", 13)} OpenStreetMap</a></div>
-      <div class="provenance">${icon(p.status === "checked" ? "check" : "info", 14)} ${checkedLabel(p)} · ${esc(p.source.label)} <button class="btn ghost small" data-report="${p.id}" style="margin-left:auto">${icon("flag", 14)} Report</button></div>
+      <div class="provenance">${provenance(p)} <button class="btn ghost small" data-report="${p.id}" style="margin-left:auto">${icon("flag", 14)} Report</button></div>
     </article>`;
   }
 
@@ -768,8 +773,6 @@
   // ---------- ABOUT ----------
   function renderAbout() {
     document.title = "How we plan · Questmax";
-    const total = dest.activities.length + dest.places.length;
-    const checked = [...dest.activities, ...dest.places].filter(x => x.status === "checked").length;
     app.innerHTML = `<section class="section"><div class="wrap prose">
       <span class="eyebrow">How Questmax works</span>
       <h1 style="font-size:clamp(1.9rem,4.5vw,2.6rem)">A travel friend who shows their working.</h1>
@@ -781,11 +784,10 @@
         <li>Costs are ranges built from typical prices for your budget level: where you sleep, food, park fees, activities and getting around.</li>
         <li>We read your notes for clues (kids, a slower pace, a love of birds) and show you what we picked up, so nothing happens behind your back.</li>
       </ul>
-      <h2>How sure are we?</h2>
+      <h2>Where the info comes from</h2>
       <div class="card pad stack">
         <p><span class="chip ok">${icon("check", 14)} Checked</span> We confirmed this with the provider or an official source on the date shown.</p>
-        <p><span class="chip warn">${icon("alert", 14)} Not checked yet</span> Comes from our starting list. Looks right, but confirm before you build your day around it.</p>
-        <p class="muted">Right now: <strong>${checked} of ${total}</strong> Malawi listings checked. We’re working through the rest.</p>
+        <p><span class="chip">${icon("info", 14)} Questmax research</span> Our own research, and our best current information. Prices and opening times change, so confirm with the provider before you go.</p>
       </div>
       <h2>What we don’t do (yet)</h2>
       <ul><li>No live bookings and no guaranteed availability.</li><li>We don’t copy listings from map apps or present guesses as facts.</li><li>One country at a time. Malawi first, more once we can stand behind the info.</li></ul>
